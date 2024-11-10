@@ -22,14 +22,14 @@ JUMP_HEIGHT = 10  # Maximum height the cowboy can jump to
 Y_Jumpspeed = JUMP_HEIGHT  # Set the initial jump speed to the defined jump height
 
 # Load images and transform their size for the cowboy character's appearance
-STANDING_SURFACE = pygame.transform.scale(pygame.image.load("stand 1.png"), (48, 64))  # Image when standing
-JUMPING_SURFACE = pygame.transform.scale(pygame.image.load("jump 1.png"), (48, 64))  # Image when jumping
+STANDING_SURFACE = pygame.transform.scale(pygame.image.load("stand 1.png"), (88, 104))  # Image when standing
+JUMPING_SURFACE = pygame.transform.scale(pygame.image.load("jump 1.png"), (88, 104))  # Image when jumping
 
 # Load the background image
 BACKGROUND = pygame.image.load("background.png")
 BACKGROUND_WIDTH = BACKGROUND.get_width() #get the width of background for scrolling
 x_offset = 0
-SCROLL_SPEED =5 #spedd for background scrolling, I can modify
+SCROLL_SPEED =5 #speed for background scrolling, I can modify
 
 # Create a rectangle for the cowboy's position, starting with the standing surface
 cowboy_rect = STANDING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))
@@ -38,7 +38,7 @@ cowboy_rect = STANDING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))
 while True:
     # Check for events in the game window
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:  # If quit event detected, exit the game
+        if event.type == pygame.QUIT:  
             pygame.quit()
             sys.exit()
 
