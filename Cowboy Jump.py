@@ -27,6 +27,9 @@ JUMPING_SURFACE = pygame.transform.scale(pygame.image.load("jump 1.png"), (48, 6
 
 # Load the background image
 BACKGROUND = pygame.image.load("background.png")
+BACKGROUND_WIDTH = BACKGROUND.get_width() #get the width of background for scrolling
+x_offset = 0
+SCROLL_SPEED =5 #spedd for background scrolling, I can modify
 
 # Create a rectangle for the cowboy's position, starting with the standing surface
 cowboy_rect = STANDING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))
@@ -43,9 +46,15 @@ while True:
     keys_pressed = pygame.key.get_pressed()
     if keys_pressed[pygame.K_SPACE]:  # Start jumping if space is pressed
         jumping = True
+    
+    # creating the background scrolling
+    x_offset -= SCROLL_SPEED
+    if x_offset <= -BACKGROUND_WIDTH:
+        x_offset =0
 
-    # Draw the background image on the screen
-    SCREEN.blit(BACKGROUND, (0, 0))
+    # Draw the background image on the screen twice to cover the whole screen area
+    SCREEN.blit(BACKGROUND, (x_offset, 0))
+    SCREEN.blit(BACKGROUND, (x_offset + BACKGROUND_WIDTH, 0))
 
     # If the cowboy is in the middle of a jump
     if jumping:
