@@ -46,9 +46,15 @@ while True:
     keys_pressed = pygame.key.get_pressed()
     if keys_pressed[pygame.K_SPACE]:  # Start jumping if space is pressed
         jumping = True
+    
+    # creating the background scrolling
+    x_offset -= SCROLL_SPEED
+    if x_offset <= -BACKGROUND_WIDTH:
+        x_offset =0
 
-    # Draw the background image on the screen
-    SCREEN.blit(BACKGROUND, (0, 0))
+    # Draw the background image on the screen twice to cover the whole screen area
+    SCREEN.blit(BACKGROUND, (x_offset, 0))
+    SCREEN.blit(BACKGROUND, (x_offset + BACKGROUND_WIDTH, 0))
 
     # If the cowboy is in the middle of a jump
     if jumping:
