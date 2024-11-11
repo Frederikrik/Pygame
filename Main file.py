@@ -157,7 +157,7 @@ while True:
     # Update the display to show new positions and images
     pygame.display.update()
     CLOCK.tick(60)  # Cap the frame rate at 60 frames per second
-   
+#pygame.quit()  
     
    
 
@@ -207,4 +207,4 @@ while True:
     # pygame.display.flip()
 
 # Quit Pygame
-# pygame.quit()
+
