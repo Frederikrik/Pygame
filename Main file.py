@@ -139,7 +139,6 @@ while True:
     # Display score
     score_text = font.render("Score: " + str(score), True, (0, 0, 0))
     SCREEN.blit(score_text, (10, 10))
-    
     # Update score
     if cactus_rect.right < cowboy_rect.left:  # When the cowboy successfully crosses the cactus
         score += 1  # Score plus 1
