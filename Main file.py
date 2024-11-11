@@ -54,11 +54,11 @@ snake_rect = snake_img.get_rect()
 # Set the initial positions of the cactus and snake
 cactus_rect.x = 500
 cactus_rect.y = 450
-snake_rect.x = 700
+snake_rect.x = 800
 snake_rect.y = 450
 
 # Set the speed of the cactus and snake
-cactus_speed = 2
+cactus_speed = 3
 snake_speed = 3
 
 # Initialize score
