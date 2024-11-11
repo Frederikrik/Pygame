@@ -78,7 +78,7 @@ while True:
             game_started = True
         # Display the start screen (here for the game instruction to display)
         SCREEN.fill((255, 255, 255))  # White background
-        start_text = font.render("Press SPACE to Start", True, (0, 0, 0))
+        start_text = font.render("Welcome to the Cowboy jumping game!", True, (0, 0, 0))
         text_rect = start_text.get_rect(center=(800 / 2, 600 / 2))
         SCREEN.blit(start_text, text_rect)
         pygame.display.update()
@@ -142,15 +142,14 @@ while True:
             game_over = True  # Game over if cowboy hits cactus
         elif cowboy_rect.colliderect(snake_rect):
             score -= 1  # Decrease score if cowboy hits snake
-    
-
+        # Update score
+        elif cactus_rect.right < cowboy_rect.left:  # When the cowboy successfully crosses the cactus
+            score += 1  # Score plus 1
 
     # Display score
         score_text = font.render("Score: " + str(score), True, (0, 0, 0))
         SCREEN.blit(score_text, (10, 10))
-    # Update score
-    #if cactus_rect.right < cowboy_rect.left:  # When the cowboy successfully crosses the cactus
-      #  score += 1  # Score plus 1
+    
     else:
         game_over_text= font.render("GAME OVER! ", True,(255,0,0))
         text_rect = game_over_text.get_rect (center=(800/2, 600/2))
