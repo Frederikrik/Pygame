@@ -11,7 +11,7 @@ SCREEN = pygame.display.set_mode((800, 600))  # Create a display window of size 
 pygame.display.set_caption("Jumping in PyGame")  # Set the window title
 
 # Initial position of the cowboy character
-X_POSITION, Y_POSITION = 400, 500  # Cowboy starts at (400, 500) in the window
+X_POSITION, Y_POSITION = 100, 500  # Cowboy starts at (400, 500) in the window
 
 # Set jumping state to False by default
 jumping = False  # Variable to track if the cowboy is currently jumping
@@ -27,9 +27,9 @@ JUMPING_SURFACE = pygame.transform.scale(pygame.image.load("jump 1.png"), (88, 1
 
 # Load the background image
 BACKGROUND = pygame.image.load("background.png")
-BACKGROUND_WIDTH = BACKGROUND.get_width() #get the width of background for scrolling
-x_offset = 0
-SCROLL_SPEED =5 #speed for background scrolling, I can modify
+#BACKGROUND_WIDTH = BACKGROUND.get_width() #get the width of background for scrolling
+#x_offset = 0
+#SCROLL_SPEED =5 #speed for background scrolling, I can modify
 
 # Create a rectangle for the cowboy's position, starting with the standing surface
 cowboy_rect = STANDING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))
@@ -52,14 +52,15 @@ cactus_rect = cactus_img.get_rect()
 snake_rect = snake_img.get_rect()
 
 # Set the initial positions of the cactus and snake
-cactus_rect.x = 500
+cactus_rect.x = 600
 cactus_rect.y = 450
-snake_rect.x = 800
+snake_rect.x = 1000
 snake_rect.y = 450
 
+COWBOY_SPEED = 5
 # Set the speed of the cactus and snake
-cactus_speed = 3
-snake_speed = 3
+#cactus_speed = 3
+#snake_speed = 3
 
 # Initialize score
 score = 0
@@ -83,37 +84,15 @@ while True:
     if keys_pressed[pygame.K_SPACE]:  # Start jumping if space is pressed
         jumping = True
     
-    # creating the background scrolling
-    x_offset -= SCROLL_SPEED
-    if x_offset <= -BACKGROUND_WIDTH:
-        x_offset =0
-
+    SCREEN.blit(BACKGROUND, (0,0))
     # Draw the background image on the screen twice to cover the whole screen area
-    SCREEN.blit(BACKGROUND, (x_offset, 0))
-    SCREEN.blit(BACKGROUND, (x_offset + BACKGROUND_WIDTH, 0))
-
-    # Update cactus and snake positions
-    cactus_rect.x -= SCROLL_SPEED  # Cactus and snakes shall move with the background
-    snake_rect.x -= SCROLL_SPEED
-
-    # If the cactus or snake moves off screen, reset the position
-    # According to rules of the game, if the score is or lower than 0, a cactus will definitely appear
-    if cactus_rect.x < -cactus_rect.width:
-        cactus_rect.x = 800 # Reset the position as background moves
-        if score <= 0:  # If the score is or lower than 0, a cactus will definitely appear
-            cactus_img = pygame.image.load("cactus.png")  # Reload the cactus
-            cactus_img = pygame.image.load("cactus.png").convert()
-            cactus_img.set_colorkey((255, 255, 255))
-            cactus_rect = cactus_img.get_rect()
-            cactus_rect.x = 400
-            cactus_rect.y = 400 - cactus_rect.height
-    if snake_rect.x < -snake_rect.width:
-        snake_rect.x = 800 # Reset the position as background moves
+    #SCREEN.blit(BACKGROUND, (x_offset, 0))
+    #CREEN.blit(BACKGROUND, (x_offset + BACKGROUND_WIDTH, 0))
     
-    # Draw cactus and snake
-    SCREEN.blit(cactus_img, cactus_rect)
-    SCREEN.blit(snake_img, snake_rect)
-
+    # Move cowboy to the right and reset if he goes off-screen
+    X_POSITION += COWBOY_SPEED
+    if X_POSITION > SCREEN.get_width():
+        X_POSITION = -STANDING_SURFACE.get_width()
     # If the cowboy is in the middle of a jump
     if jumping:
         Y_POSITION -= Y_Jumpspeed  # Move the cowboy up by the current jump speed
@@ -127,36 +106,73 @@ while True:
         cowboy_rect = STANDING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))  # Reset to standing position
         SCREEN.blit(STANDING_SURFACE, cowboy_rect)  # Draw the standing image
 
+    # Update cactus and snake positions
+    cactus_rect.x -= COWBOY_SPEED  # Cactus and snakes shall move with the background
+    snake_rect.x -= COWBOY_SPEED
+
+    # If the cactus or snake moves off screen, reset the position
+    # According to rules of the game, if the score is or lower than 0, a cactus will definitely appear
+    #if cactus_rect.x < -cactus_rect.width:
+     #   cactus_rect.x = 800 # Reset the position as background moves
+      #  if score <= 0:  # If the score is or lower than 0, a cactus will definitely appear
+       #     cactus_img = pygame.image.load("cactus.png")  # Reload the cactus
+        #    cactus_img = pygame.image.load("cactus.png").convert()
+         #   cactus_img.set_colorkey((255, 255, 255))
+          #  cactus_rect = cactus_img.get_rect()
+           # cactus_rect.x = 400
+            #cactus_rect.y = 400 - cactus_rect.height
+    #if snake_rect.x < -snake_rect.width:
+     #   snake_rect.x = 800 # Reset the position as background moves
+    
+    if cactus_rect.right < 0:
+        cactus_rect.x = SCREEN.get_width()
+    if snake_rect.right < 0:
+        snake_rect.x = SCREEN.get_width() + 200
+
+    # Draw cactus and snake
+    SCREEN.blit(cactus_img, cactus_rect)
+    SCREEN.blit(snake_img, snake_rect)
+     # Display score
+    score_text = font.render("Score: " + str(score), True, (0, 0, 0))
+    SCREEN.blit(score_text, (10, 10))
+
+     # Update score if cowboy passes a cactus or snake
+    if cactus_rect.right < cowboy_rect.left:
+        score += 1  
+    if snake_rect.right < cowboy_rect.left:
+        score += 1   
+   
+    
+    # Move the cactus and snake
+    #cactus_rect.x -= cactus_speed
+    #snake_rect.x -= snake_speed
+
+    # Display score
+    #score_text = font.render("Score: " + str(score), True, (0, 0, 0))
+    #SCREEN.blit(score_text, (10, 10))
+    
+    # Update score
+    #if cactus_rect.right < cowboy_rect.left:  # When the cowboy successfully crosses the cactus
+     #   score += 1  # Score plus 1
+
+    # Check for collisions
+    if not game_over:  
+        if cowboy_rect.colliderect(cactus_rect) or cowboy_rect.colliderect(snake_rect):
+            game_over = True  
+            game_over_text = font.render("Game Over!", True, (255, 0, 0))
+            text_rect = game_over_text.get_rect(center=(800/2, 600/2))
+            SCREEN.blit(game_over_text, text_rect)
+
     # Update the display to show new positions and images
     pygame.display.update()
     CLOCK.tick(60)  # Cap the frame rate at 60 frames per second
 
-    # Move the cactus and snake
-    cactus_rect.x -= cactus_speed
-    snake_rect.x -= snake_speed
-
-    # Display score
-    score_text = font.render("Score: " + str(score), True, (0, 0, 0))
-    SCREEN.blit(score_text, (10, 10))
-    
-    # Update score
-    if cactus_rect.right < cowboy_rect.left:  # When the cowboy successfully crosses the cactus
-        score += 1  # Score plus 1
-
-    # Check for collisions
-    if not game_over:  # Only check when game is not over
-        if cowboy_rect.colliderect(cactus_rect):
-            game_over = True  # Hit the cactus, game over
-            # break
-        if cowboy_rect.colliderect(snake_rect):
-            score -= 1  # Hit the snake, score minus 1
-
     # Game over Game prompt
-    if game_over:
-        game_over = True
-        game_over_text = font.render("Game Over!", True, (255, 0, 0))
-        text_rect = game_over_text.get_rect(center=(800/2, 600/2))
-        SCREEN.blit(game_over_text, text_rect)
+    #if game_over:
+     #   game_over = True
+      #  game_over_text = font.render("Game Over!", True, (255, 0, 0))
+       # text_rect = game_over_text.get_rect(center=(800/2, 600/2))
+        #SCREEN.blit(game_over_text, text_rect)
 
         # Wait for the player to press the spacebar to restart the game
         # waiting_for_key = True
