@@ -1,0 +1,14 @@
+Cowboy Jump is an endless runner-style game where you guide a cowboy through a desert landscape, jumping over cacti and
+avoiding snakes to increase your score. But be careful: hitting a cactus ends the game, while running into a snake will
+lower your score. Challenge yourself to keep the cowboy going and reach a high score!
+
+Gameplay
+Jumping:
+    Press the space bar on your keyboard to make the cowboy jump.
+Scoring:
+        Jump over a cactus to increase the score.
+        Jump over a snake to keep the score the same.
+        Touch a snake to decrease the score by one (game continues).
+Game Over:
+        If the cowboy crashes into a cactus, the game ends, and a message appears: “Game over.”
+        The cowboy disappears from the screen, and the game can be restarted by pressing the space bar.
