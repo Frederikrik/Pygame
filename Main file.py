@@ -78,8 +78,13 @@ while True:
             game_started = True
         # Display the start screen (here for the game instruction to display)
         SCREEN.fill((255, 255, 255))  # White background
-        start_text = font.render("Welcome to the Cowboy Jump!", \n ,"All you need to play this game is the space bar on the keyboard linked to your computer." \n,
-        "Achieve the highest score by successfully jumping over cacti and avoiding snakes! Points are earned for each cactus successfully jumped over. Avoid snakes to keep from losing points but remember that the game continues as long as you avoid hitting a cactus."
+        start_text = font.render("""Welcome to the Cowboy Jump!
+         All you need to play this game is the space bar 
+         on the keyboard linked to your computer.
+         Achieve the highest score by successfully jumping over cacti and avoiding snakes!
+          Points are earned for each cactus successfully jumped over. Avoid snakes to keep
+           from losing points but remember that the game continues as long as you avoid 
+           hitting a cactus."""
 , True, (0, 0, 0))
         text_rect = start_text.get_rect(center=(800 / 2, 600 / 2))
         SCREEN.blit(start_text, text_rect)
