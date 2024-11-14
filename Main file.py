@@ -206,5 +206,12 @@ while True:
     # Update display
     # pygame.display.flip()
 
+    #import mixer for music
+    pygame.mixer.init()
+    # Load and play background music
+    pygame.mixer.music.load("western-theme-162884.mp3")  # Path to the music file
+    pygame.mixer.music.set_volume(0.5)  # Set volume level (0.0 to 1.0)
+    pygame.mixer.music.play(-1)  # -1 means the music will loop indefinitely
+
 # Quit Pygame
 
