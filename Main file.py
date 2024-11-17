@@ -281,13 +281,12 @@ def game_start():
         if keys_pressed[pygame.K_SPACE]:  # Start jumping if space is pressed
             return True
 
-# Problem to do: Restart game
 def game_restart():
     # show the game result
     game_over_text = font.render("GAME OVER!", True,(255,0,0))
     game_restart_text = font.render("Press R to restart", True, (255,0,0))
-    game_over_rect = game_over_text.get_rect(center=(800/2, 600/2))
-    game_restart_rect = game_over_text.get_rect(center=(350, 350))
+    game_over_rect = game_over_text.get_rect(center=(800/2, 100))
+    game_restart_rect = game_over_text.get_rect(center=(800/2, 150))
     SCREEN.blit(game_over_text, game_over_rect)
     SCREEN.blit(game_restart_text, game_restart_rect)
     pygame.display.update()
