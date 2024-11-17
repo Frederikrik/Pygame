@@ -147,13 +147,15 @@ def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
         collision = cowboy_mask.overlap(obstacle.mask, offset)
         if collision:
             if obstacle.obstacle_class ==0:
-                game_over =True
+                if not jumping:
+                    game_over =True
             elif obstacle.obstacle_class ==1:
-                score-= 1
+                if not jumping:
+                    score-= 1
             obstacle_lst.remove(obstacle)
-        elif obstacle.rect.right < cowboy_rect.left and obstacle.rect.y == obstacle.obstacle_y:
-            if obstacle.obstacle_class ==0:
-                score += 1
+        elif obstacle.obstacle_class ==0 and obstacle.rect.right < cowboy_rect.left and jumping:
+            score += 1
+            print ("Score increased! Current score: ", score)
             obstacle_lst.remove(obstacle)
     
     if game_over:
