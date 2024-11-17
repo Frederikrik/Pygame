@@ -45,38 +45,38 @@ game_over = False
 
 GROUND_HEIGHT = 500
  
-# 随机生成障碍物
+# Randomly generated obstacles
 class Obstacle():
-    score = 0  # 初始化分数变量为1
-    move = 5  # 设置移动速度为3
-    obstacle_y = 500  # 设置障碍物的y坐标为450
+    score = 0  # Initialize the score to 0
+    move = 5  # Set the movement speed to 3
+    obstacle_y = 500  # Set the y position of the obstacle to 500
     can_move = True
 
     def __init__(self):
-        self.rect = pygame.Rect(0,0,0,0)  # 创建用于碰撞检测的矩形对象
+        self.rect = pygame.Rect(0,0,0,0)  # Create a rectangle for collision checks
         images = [
             pygame.image.load("cactus.png").convert(),
             pygame.image.load("snake.png").convert()
         ]
-        self.image = random.choice(images)  # 直接随机选择一个图片
+        self.image = random.choice(images)  # Randomly select an image
         self.obstacle_class = images.index(self.image)
         self.mask= pygame.mask.from_surface(self.image)
         
-        # 设置障碍物的大小、位置和背景透明度以及障碍物矩阵的大小
-        self.image = pygame.transform.scale(self.image, (100, 100))  # 将图像缩放到 50x50 像素
+        # Set the size, position and background transparency of the obstacles and the size of the obstacle rectangle
+        self.image = pygame.transform.scale(self.image, (100, 100))  # Set the size of the obstacles
         # self.rect.size = (50, 50)
-        self.rect.size = self.image.get_size()  # 使用调整后的图像尺寸更新矩阵
+        self.rect.size = self.image.get_size()  # Adjust the rectangle size
         self.width, self.height = self.rect.size
-        self.x = 800  # 设置障碍物的初始位置为屏幕右侧
+        self.x = 800  # Set the initial position of the obstacles to the right side of the screen
         self.y = self.obstacle_y
         self.rect.center = (self.x ,self.y)
         self.image.set_colorkey((255, 255, 255))  
     
-    #障碍物移动
+    # Obstacles move
     def obstacle_move(self):
         if self.can_move:
             self.rect.x -= self.move
-	#绘制障碍物
+	# Draw the obstacles
     def draw_obstacle(self):
         SCREEN.blit(self.image,(self.rect.x, self.rect.y))
 
@@ -105,10 +105,10 @@ def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
             sys.exit()
 
 
-    # 生成障碍物
+    # Genrate obstacles
     obstacle = Obstacle()
     if len(obstacle_lst) < 2 and time.time() >= obstacle_time + 5:
-        obstacle_lst.append(obstacle)  # 将障碍物对象添加到列表中
+        obstacle_lst.append(obstacle)  # Add obstacles to the list
         obstacle_time = time.time()
     
     for i in range(len(obstacle_lst)):
