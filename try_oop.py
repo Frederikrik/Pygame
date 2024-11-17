@@ -124,7 +124,8 @@ class Game:
                 self.game_started = True
         elif not self.game_over and keys[pygame.K_SPACE]:
             self.player.jump()
-
+    
+   
     def update(self):
         if self.game_started and not self.game_over:
             self.player.update()
