@@ -10,7 +10,7 @@ pygame.init()
 # General setup for clock and display
 CLOCK = pygame.time.Clock()  # Set up the clock to control the game's frame rate
 SCREEN = pygame.display.set_mode((800, 600))  # Create a display window of size 800x600
-pygame.display.set_caption("Jumping in PyGame")  # Set the window title
+pygame.display.set_caption("COWBOY JUMP")  # Set the window title
 
 # Initial position of the cowboy character
 X_POSITION, Y_POSITION = 150, 500  
@@ -37,8 +37,6 @@ SCROLL_SPEED =5 #speed for background scrolling
 cowboy_rect = STANDING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))
 
 
-# Initialize score
-# score = 0
 game_started = False
 # Game over sign
 game_over = False
@@ -64,7 +62,6 @@ class Obstacle():
         
         # Set the size, position and background transparency of the obstacles and the size of the obstacle rectangle
         self.image = pygame.transform.scale(self.image, (100, 100))  # Set the size of the obstacles
-        # self.rect.size = (50, 50)
         self.rect.size = self.image.get_size()  # Adjust the rectangle size
         self.width, self.height = self.rect.size
         self.x = 800  # Set the initial position of the obstacles to the right side of the screen
@@ -84,13 +81,28 @@ class Obstacle():
 font = pygame.font.Font(None, 50)
 
 # Main game loop
-def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
-    global Y_Jumpspeed, Y_POSITION, cowboy_rect, GROUND_HEIGHT
+def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time, start_time):
+    global Y_Jumpspeed, Y_POSITION, cowboy_rect, GROUND_HEIGHT, SCROLL_SPEED
+    
+    collision_times = {}
     game_over = False
     keys_pressed =pygame.key.get_pressed()
     if keys_pressed [pygame.K_SPACE]:
         jumping= True
-
+    # increase speed after some time  
+    elapsed_time= time.time() - start_time
+    if elapsed_time > 10:
+        SCROLL_SPEED =7
+        for obstacle in obstacle_lst:
+            obstacle.move = 7
+    if elapsed_time > 20:
+        SCROLL_SPEED = 9
+        for obstacle in obstacle_lst:
+            obstacle.move = 9
+    if elapsed_time > 25:
+        SCROLL_SPEED = 10
+        for obstacle in obstacle_lst:
+            obstacle.move = 10            
     x_offset -= SCROLL_SPEED
     if x_offset <= -BACKGROUND_WIDTH:
         x_offset =0
@@ -105,7 +117,7 @@ def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
             sys.exit()
 
 
-    # Genrate obstacles
+    # Generate obstacles
     obstacle = Obstacle()
     if len(obstacle_lst) < 2 and time.time() >= obstacle_time + 5:
         obstacle_lst.append(obstacle)  # Add obstacles to the list
@@ -114,7 +126,7 @@ def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
     for i in range(len(obstacle_lst)):
         obstacle_lst[i].obstacle_move()
         obstacle_lst[i].draw_obstacle()
-    
+        
     # If the cowboy is in the middle of a jump
     if jumping:
         Y_POSITION -= Y_Jumpspeed  # Move the cowboy up by the current jump speed
@@ -133,15 +145,6 @@ def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
         cowboy_mask = pygame.mask.from_surface(STANDING_SURFACE)
         SCREEN.blit(STANDING_SURFACE, cowboy_rect)  # Draw the standing image
 
-    #for i, obstacle in enumerate(obstacle_lst):
-     #   if cowboy_rect.colliderect(obstacle):
-      #      game_over = True  # Game over if cowboy hits cactus
-      #      break
-        # Update score: Unsure, need to check
-       # elif obstacle.rect.right < cowboy_rect.left and obstacle.rect.y < Y_POSITION:  # When the cowboy successfully crosses the cactus
-        #    obstacle_lst.remove(obstacle)
-         #   if obstacle.obstacle_class == 0:
-          #      score += 1  # Score plus 1
     for obstacle in obstacle_lst:
         offset = (obstacle.rect.x - cowboy_rect.x, obstacle.rect.y - cowboy_rect.y)
         collision = cowboy_mask.overlap(obstacle.mask, offset)
@@ -151,7 +154,10 @@ def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
                     game_over =True
             elif obstacle.obstacle_class ==1:
                 if not jumping:
-                    score-= 1
+                    if score >0:
+                        score-= 1
+                    else:
+                        game_over= True # avoid score below zero
             obstacle_lst.remove(obstacle)
         elif obstacle.obstacle_class ==0 and obstacle.rect.right < cowboy_rect.left and jumping:
             score += 1
@@ -169,14 +175,14 @@ def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
     pygame.display.update()
     CLOCK.tick(60)  # Cap the frame rate at 60 frames per second
 
-    return x_offset, jumping, score, obstacle_lst, obstacle_time
+    return x_offset, jumping, score, obstacle_lst, obstacle_time, start_time
    
 
 def game_start():
     # Display the start screen (here for the game instruction to display)
     SCREEN.fill ((255, 255, 255))
     texts = [
-        ("Welcome to the cowboy jumping game!", (255, 0, 0)),
+        ("Welcome to the COWBOY JUMP game!", (255, 0, 0)),
         ("Press SPACE to start", (0, 0, 0)),
         ("Jump over CACTUS to collect points", (0, 0, 0)),
         ("Avoid SNAKES or you'll lose points", (0, 0, 0)),
@@ -203,7 +209,8 @@ def game_start():
             return True
 
 def game_restart():
-    # show the game result
+    global SCROLL_SPEED
+    SCROLL_SPEED = 5
     game_over_text = font.render("GAME OVER!", True,(255,0,0))
     game_restart_text = font.render("Press R to restart", True, (255,0,0))
     game_over_rect = game_over_text.get_rect(center=(800/2, 100))
@@ -228,7 +235,7 @@ def game_restart():
 def game_round():
     # set initial state
     # initialize obstacle
-    obstacle_lst = []
+    obstacle_lst = [] 
     obstacle_time = time.time() - 5
 
     # set score
@@ -236,10 +243,9 @@ def game_round():
 
     x_offset = 0
     
-    # Set jumping state to False by default
-    jumping = False  # Variable to track if the cowboy is currently jumping
-    
-    params = [x_offset, jumping, score, obstacle_lst, obstacle_time]
+    jumping = False   
+    start_time = time.time()
+    params = [x_offset, jumping, score, obstacle_lst, obstacle_time, start_time]
     while True:
         loop_result = game_loop(*params)
         if loop_result is False:
