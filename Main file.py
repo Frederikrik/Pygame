@@ -253,10 +253,22 @@ def game_loop(x_offset, jumping, score, obstacle_lst, obstacle_time):
 
 def game_start():
     # Display the start screen (here for the game instruction to display)
-    SCREEN.fill((255, 255, 255))  # White background
-    start_text = font.render("Welcome to the cowboy jumping game!", True, (0, 0, 0))
-    text_rect = start_text.get_rect(center=(800 / 2, 600 / 2))
-    SCREEN.blit(start_text, text_rect)
+    SCREEN.fill ((255, 255, 255))
+    texts = [
+        ("Welcome to the cowboy jumping game!", (255, 0, 0)),
+        ("Press SPACE to start", (0, 0, 0)),
+        ("Jump over CACTUS to collect points", (0, 0, 0)),
+        ("Avoid SNAKES or you'll lose points", (0, 0, 0)),
+    ]
+    
+    y_start = 200  # Starting Y-coordinate for the first text
+    y_gap = 50     # Space between lines
+    
+    for i, (text, color) in enumerate(texts):
+        rendered_text = font.render(text, True, color)
+        text_rect = rendered_text.get_rect(center=(800 // 2, y_start + i * y_gap))
+        SCREEN.blit(rendered_text, text_rect)
+    
     pygame.display.update()
 
     while True:
